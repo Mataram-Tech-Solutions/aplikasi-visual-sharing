@@ -2,22 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Foto;
 use Illuminate\Http\Request;
 
-class FotoController extends Controller
+class KomentarController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data = Foto::with('uploadby', 'onalbum')->get();
-        return response()->json([
-            'status' => true,
-            'message' => 'Data ditemukan',
-            'data' => $data,
-        ],200);
+        //
     }
 
     /**
