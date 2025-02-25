@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Komentar extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'isikomen',
+        'created_by',
+        'fotoId'
+    ];
+
+    public function photo()
+    {
+        return $this->belongsTo(Foto::class);
+    }
 }

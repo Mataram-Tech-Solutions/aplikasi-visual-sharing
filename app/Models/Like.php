@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Like extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'userId',
+        'fotoId',
+    ];
+
+    public function photo()
+    {
+        return $this->belongsTo(Foto::class);
+    }
 }

@@ -23,4 +23,14 @@ class Foto extends Model
     {
         return $this->belongsTo(Album::class, 'albumId');
     }
+
+    public function countlikes()
+    {
+        return $this->hasMany(Like::class, 'fotoId');
+    }
+
+    public function countcoment() 
+    {
+        return $this->hasMany(Komentar::class, 'fotoId');
+    }
 }

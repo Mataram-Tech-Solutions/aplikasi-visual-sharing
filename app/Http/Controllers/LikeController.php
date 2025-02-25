@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Like;
 use Illuminate\Http\Request;
 
 class LikeController extends Controller
@@ -27,7 +28,22 @@ class LikeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (!$request->has('userid') || !$request->has('fotoid')) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Terjadi kesalahan!',
+            ], 400);
+        }
+
+        Like::create([
+            'userId' => $request->userid,
+            'fotoId' => $request->fotoid,
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Berhasil like!',
+        ],200 );
     }
 
     /**

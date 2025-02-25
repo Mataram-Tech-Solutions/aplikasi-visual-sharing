@@ -70,7 +70,7 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'alamat' => 'required|string|max:255'
+            // 'alamat' => 'required|string|max:255'
         ]);
     
         // Buat user baru
@@ -104,7 +104,7 @@ class AuthController extends Controller
                 'status' => true,
                 'message' => 'Login successful',
                 'token' => $token,
-                'user' => $user
+                'user' => $user 
             ], 200);
         }
 
