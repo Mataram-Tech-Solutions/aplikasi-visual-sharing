@@ -12,11 +12,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $data = Foto::with('uploadby')->withCount('countlikes', 'countcoment')->orderBy('created_at', 'desc')->get();
+        $data = Foto::with('uploadby')->withCount('countlikes', 'countcoment')
+        ->orderBy('created_at', 'desc')
+        ->get()
+        ->toArray();;
+        $formattedData = array_map(fn($item) => [$item], $data);
+
         return response()->json([
             'status' => true,
             'message' => 'Data ditemukan!',
-            'data' => $data,
+            'data' => $formattedData,
         ],200 );
     }
 

@@ -24,14 +24,14 @@ use App\Models\User;
 |
 */
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/registrasi', [AuthController::class, 'registration']);
+Route::post('/registrasi', [AuthController::class, 'regis']);
 
 Route::middleware('auth:sanctum')->resource('/album', AlbumController::class)->names('album');
 Route::middleware('auth:sanctum')->resource('/foto', FotoController::class)->names('foto');
+Route::middleware('auth:sanctum')->resource('/like', LikeController::class)->names('like');
 
 //home page
 Route::middleware('auth:sanctum')->get('/home', [HomeController::class, 'index'])->name('home');
-Route::middleware('auth:sanctum')->post('/like', [LikeController::class, 'store'])->name('like');
 Route::middleware('auth:sanctum')->post('/comment', [KomentarController::class, 'store'])->name('comment');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

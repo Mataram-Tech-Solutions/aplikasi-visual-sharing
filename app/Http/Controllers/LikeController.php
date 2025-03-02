@@ -51,7 +51,31 @@ class LikeController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $likes = Like::where('fotoId', $id)
+            ->with('likedby') // Pastikan relasi ke model User sudah ada
+            ->get();
+
+        // Kelompokkan data sesuai format yang diinginkan
+        $result = [
+            'id' => $id,
+            'fotoId' => $id,
+            'user' => $likes->map(function ($like) {
+                return [
+                    'id' => $like->user->id,
+                    'name' => $like->user->name,
+                    'email' => $like->user->email,
+                    'foto' => $like->user->foto,
+                    'alamat' => $like->user->alamat,
+                ];
+            })
+        ];
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Data pengguna yang menyukai foto ditemukan!',
+            'data' => [$result] // Dibungkus dalam array agar sesuai format
+        ], 200);
+
     }
 
     /**

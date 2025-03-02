@@ -21,7 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'alamat'
+        'alamat',
+        'foto'
     ];
 
     /**
@@ -51,5 +52,9 @@ class User extends Authenticatable
     public function uploadby()
     {
         return $this->hasMany(Foto::class, 'id');
+    }
+
+    public function likedby() {
+        return $this->hasMany(Like::class, 'userId');
     }
 }
