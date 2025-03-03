@@ -6,12 +6,13 @@ use App\Http\Controllers\FotoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KomentarController;
 use App\Http\Controllers\LikeController;
+use App\Models\Komentar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
-
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,13 +30,26 @@ Route::post('/registrasi', [AuthController::class, 'regis']);
 Route::middleware('auth:sanctum')->resource('/album', AlbumController::class)->names('album');
 Route::middleware('auth:sanctum')->resource('/foto', FotoController::class)->names('foto');
 Route::middleware('auth:sanctum')->resource('/like', LikeController::class)->names('like');
+Route::middleware('auth:sanctum')->resource('/comment', KomentarController::class)->names('comment');
 
 //home page
 Route::middleware('auth:sanctum')->get('/home', [HomeController::class, 'index'])->name('home');
-Route::middleware('auth:sanctum')->post('/comment', [KomentarController::class, 'store'])->name('comment');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    $user = $request->user();
+    return response()->json([
+        'status' => true,
+        'message' => 'Data user ditemukan!',
+        'data' => [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'foto' => $user->foto,
+            'alamat' => $user->alamat,
+            'created_at' => Carbon::parse($user->created_at)->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::parse($user->updated_at)->format('Y-m-d H:i:s'),
+        ]
+    ], 200);
 });
 
 Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {

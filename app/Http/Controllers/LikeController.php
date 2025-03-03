@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Like;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class LikeController extends Controller
@@ -28,6 +29,7 @@ class LikeController extends Controller
      */
     public function store(Request $request)
     {
+        // Validasi request
         if (!$request->has('userid') || !$request->has('fotoid')) {
             return response()->json([
                 'status' => false,
@@ -35,16 +37,30 @@ class LikeController extends Controller
             ], 400);
         }
 
-        Like::create([
-            'userId' => $request->userid,
-            'fotoId' => $request->fotoid,
-        ]);
+        $like = Like::where('userId', $request->userid)
+            ->where('fotoId', $request->fotoid)
+            ->first();
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Berhasil like!',
-        ],200 );
+        if ($like) {
+            $like->delete();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Berhasil unlike!',
+            ], 200);
+        } else {
+            Like::create([
+                'userId' => $request->userid,
+                'fotoId' => $request->fotoid,
+            ]);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Berhasil like!',
+            ], 200);
+        }
     }
+
 
     /**
      * Display the specified resource.
@@ -55,17 +71,16 @@ class LikeController extends Controller
             ->with('likedby') // Pastikan relasi ke model User sudah ada
             ->get();
 
-        // Kelompokkan data sesuai format yang diinginkan
         $result = [
-            'id' => $id,
             'fotoId' => $id,
             'user' => $likes->map(function ($like) {
                 return [
-                    'id' => $like->user->id,
-                    'name' => $like->user->name,
-                    'email' => $like->user->email,
-                    'foto' => $like->user->foto,
-                    'alamat' => $like->user->alamat,
+                    'id' => $like->likedby->id,
+                    'name' => $like->likedby->name,
+                    'email' => $like->likedby->email,
+                    'foto' => $like->likedby->foto,
+                    'created_at' => Carbon::parse($like->created_at)->format('Y-m-d H:i:s'),
+                    'updated_at' => Carbon::parse($like->updated_at)->format('Y-m-d H:i:s'),
                 ];
             })
         ];
@@ -73,9 +88,8 @@ class LikeController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Data pengguna yang menyukai foto ditemukan!',
-            'data' => [$result] // Dibungkus dalam array agar sesuai format
+            'data' => [$result]
         ], 200);
-
     }
 
     /**

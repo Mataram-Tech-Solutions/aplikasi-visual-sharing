@@ -18,4 +18,8 @@ class Komentar extends Model
     {
         return $this->belongsTo(Foto::class);
     }
+
+    public function komentarby() {
+        return $this->belongsTo(User::class, 'id');
+    }
 }

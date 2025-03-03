@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Komentar;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class KomentarController extends Controller
@@ -44,7 +45,7 @@ class KomentarController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Berhasil berkomentar!',
-        ],200 );
+        ], 200);
     }
 
     /**
@@ -52,8 +53,41 @@ class KomentarController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $komentars = Komentar::where('fotoId', $id)
+            ->with('komentarby')
+            ->get();
+
+        if ($komentars->isEmpty()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Tidak ada komentar untuk foto ini!',
+                'data' => []
+            ], 404);
+        }
+
+        $result = $komentars->map(function ($komentar) {
+            return [
+                'id' => $komentar->id, // Ambil ID dari komentar
+                'fotoId' => $komentar->fotoId,
+                'user' => [
+                    'id' => $komentar->komentarby->id,
+                    'name' => $komentar->komentarby->name,
+                    'email' => $komentar->komentarby->email,
+                    'foto' => $komentar->komentarby->foto,
+                ],
+                'komentar' => $komentar->isikomen,
+                'created_at' => Carbon::parse($komentar->created_at)->format('Y-m-d H:i:s'),
+                'updated_at' => Carbon::parse($komentar->updated_at)->format('Y-m-d H:i:s'),
+            ];
+        });
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Data pengguna yang berkomentar ditemukan!',
+            'data' => $result
+        ], 200);
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -76,6 +110,21 @@ class KomentarController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $komentar = Komentar::where('id', $id)
+            ->first();
+
+        if ($komentar) {
+            $komentar->delete();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Berhasil hapus komentar!',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => 'Terjadi kesalahan!',
+            ], 400);
+        }
     }
 }
