@@ -8,6 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Foto extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'uploaded_by',
+        'judul',
+        'unique',
+        'namaFile',
+        'deskripsi',
+        'albumId',
+    ];
 
     public function uploadby()
     {
@@ -16,7 +24,7 @@ class Foto extends Model
 
     public function fotoalbum()
     {
-        return $this->belongsTo(Album::class, 'albumId');
+        return $this->belongsTo(Album::class, 'id');
     }
 
     public function onalbum()

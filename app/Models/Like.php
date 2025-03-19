@@ -18,7 +18,12 @@ class Like extends Model
         return $this->belongsTo(Foto::class);
     }
 
+    public function album()
+    {
+        return $this->belongsTo(Album::class);
+    }
+
     public function likedby() {
-        return $this->belongsTo(User::class, 'id');
+        return $this->belongsTo(User::class, 'userId');
     }
 }

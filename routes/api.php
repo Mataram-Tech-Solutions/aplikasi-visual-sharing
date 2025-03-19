@@ -6,6 +6,8 @@ use App\Http\Controllers\FotoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KomentarController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SearchController;
 use App\Models\Komentar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,6 +33,8 @@ Route::middleware('auth:sanctum')->resource('/album', AlbumController::class)->n
 Route::middleware('auth:sanctum')->resource('/foto', FotoController::class)->names('foto');
 Route::middleware('auth:sanctum')->resource('/like', LikeController::class)->names('like');
 Route::middleware('auth:sanctum')->resource('/comment', KomentarController::class)->names('comment');
+Route::middleware('auth:sanctum')->resource('/profile', ProfileController::class)->names('profile');
+Route::middleware('auth:sanctum')->post('/search-user', [SearchController::class, 'searchUser'])->name('searchUser');
 
 //home page
 Route::middleware('auth:sanctum')->get('/home', [HomeController::class, 'index'])->name('home');

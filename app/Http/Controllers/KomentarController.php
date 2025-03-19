@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Komentar;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class KomentarController extends Controller
 {
@@ -29,7 +30,8 @@ class KomentarController extends Controller
      */
     public function store(Request $request)
     {
-        if (!$request->has('userid') || !$request->has('fotoid') || !$request->has('komentar')) {
+        $id = Auth::id();
+        if (!$request->has('fotoid') || !$request->has('komentar')) {
             return response()->json([
                 'status' => false,
                 'message' => 'Terjadi kesalahan!',
@@ -37,7 +39,7 @@ class KomentarController extends Controller
         }
 
         Komentar::create([
-            'created_by' => $request->userid,
+            'created_by' => $id,
             'fotoId' => $request->fotoid,
             'isikomen' => $request->komentar,
         ]);
@@ -45,6 +47,7 @@ class KomentarController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Berhasil berkomentar!',
+            'data' => $request->komentar
         ], 200);
     }
 
@@ -62,7 +65,7 @@ class KomentarController extends Controller
                 'status' => false,
                 'message' => 'Tidak ada komentar untuk foto ini!',
                 'data' => []
-            ], 404);
+            ], 400);
         }
 
         $result = $komentars->map(function ($komentar) {
@@ -122,7 +125,7 @@ class KomentarController extends Controller
             ], 200);
         } else {
             return response()->json([
-                'status' => true,
+                'status' => false,
                 'message' => 'Terjadi kesalahan!',
             ], 400);
         }

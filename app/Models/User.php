@@ -55,10 +55,10 @@ class User extends Authenticatable
     }
 
     public function likedby() {
-        return $this->hasMany(Like::class, 'userId');
+        return $this->hasMany(Like::class, 'id');
     }
 
     public function komentarby() {
-        return $this->hasMany(Komentar::class, 'created_by');
+        return $this->hasMany(Komentar::class, 'id');
     }
 }

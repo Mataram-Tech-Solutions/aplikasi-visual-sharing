@@ -20,6 +20,6 @@ class Komentar extends Model
     }
 
     public function komentarby() {
-        return $this->belongsTo(User::class, 'id');
+        return $this->belongsTo(User::class, 'created_by');
     }
 }
